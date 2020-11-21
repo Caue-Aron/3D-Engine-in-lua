@@ -53,20 +53,38 @@ function Application:new(title, width, height, flags)
         love.window.setTitle(title)
     --]]
 
-    self.vCamera = vec3(1, 1, 1)
+    self.vCamera = vec3(0, 0, 0)
 
     self.cube = mesh({
-        triangle(vec3(-1.0,  0.0,  0.0), vec3( 1.0,  0.0,  0.0), vec3( 0.0,  1.0,  0.5)),
-        triangle(vec3(-1.0,  0.0,  0.0), vec3( 0.0,  1.0,  0.5), vec3( 0.0,  0.0,  1.0)),
-        triangle(vec3(-1.0,  0.0,  0.0), vec3( 1.0,  0.0,  0.0), vec3( 0.0,  0.0,  1.0)),
-        triangle(vec3( 1.0,  0.0,  0.0), vec3( 0.0,  1.0,  0.5), vec3( 0.0,  0.0,  1.0))      
+        -- SOUTH
+        triangle(vec3(0, 0, 0), vec3(0, 1, 0), vec3(1, 1, 0)),
+        triangle(vec3(0, 0, 0), vec3(1, 1, 0), vec3(1, 0, 0)),
+    
+        -- EAST
+        triangle(vec3(1, 0, 0), vec3(1, 1, 0), vec3(1, 1, 1)),
+        triangle(vec3(1, 0, 0), vec3(1, 1, 1), vec3(1, 0, 1)),
+        
+        -- NORTH
+        triangle(vec3(1, 0, 1), vec3(1, 1, 1), vec3(0, 1, 1)),
+        triangle(vec3(1, 0, 1), vec3(0, 1, 1), vec3(0, 0, 1)),
+        
+        -- WEST
+        triangle(vec3(0, 0, 1), vec3(0, 1, 1), vec3(0, 1, 0)),
+        triangle(vec3(0, 0, 1), vec3(0, 1, 0), vec3(0, 0, 0)), 
+        
+        -- TOP
+        triangle(vec3(0, 1, 0), vec3(0, 1, 1), vec3(1, 1, 1)),
+        triangle(vec3(0, 1, 0), vec3(1, 1, 1), vec3(1, 1, 0)),
+        
+        -- BOTTOM
+        triangle(vec3(1, 0, 1), vec3(0, 0, 1), vec3(0, 0, 0)),
+        triangle(vec3(1, 0, 1), vec3(0, 0, 0), vec3(1, 0, 0))       
     })
 
     function self:drawCube(finalCube)
         for key, value in pairs(finalCube.tri_s) do
-            love.graphics.setColor((key * 10) / 275, (key * 20) / 275, (key * 30) / 275, 1)
 
-            love.graphics.polygon('fill', {
+            love.graphics.polygon('line', {
                 value.point[1].x, value.point[1].y,
                 value.point[2].x, value.point[2].y,
                 value.point[3].x, value.point[3].y
@@ -177,7 +195,12 @@ function Application:new(title, width, height, flags)
             normal.y = normal.y / l
             normal.z = normal.z / l
             
-            if normal.z < 0 then
+            --if normal.z < 0 then
+            if
+                normal.x * (triTranslated.point[1].x - self.vCamera.x) +
+                normal.y * (triTranslated.point[1].y - self.vCamera.y) +
+                normal.z * (triTranslated.point[1].z - self.vCamera.z) < 0
+            then
                 self.MultiplyMatrixVector(triTranslated.point[1], triProjected.point[1], self.matProj)
                 self.MultiplyMatrixVector(triTranslated.point[2], triProjected.point[2], self.matProj)
                 self.MultiplyMatrixVector(triTranslated.point[3], triProjected.point[3], self.matProj)
