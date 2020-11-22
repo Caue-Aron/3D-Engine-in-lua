@@ -13,3 +13,5 @@ I pretend to:
     - Create a more portable version of the framework
     - Maybe change its base graphical interface to 
       WxWidgets
+    - Maybe create a way to the user input information
+      about the vertices
